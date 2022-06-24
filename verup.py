@@ -4,12 +4,12 @@ import sys
 import glob
 import os
 
-def version_up(filefullname: str):
-    filefullname = os.path.basename(filefullname)
-    filename = filefullname.split(".")[0]
-    extension = filefullname.split(".")[1]
+def version_up(filefullpath: str):
+    filedirname = os.path.dirname(filefullpath)
+    filepath, extension = os.path.splitext(filefullpath)
+    filename = os.path.basename(filepath)
     # get file list
-    filelist = glob.glob(f"*.{extension}")
+    filelist = glob.glob(f"{filedirname}/*{extension}")
     # filtered filename included
     filelist = list(filter(lambda x:filename in x, filelist))
     # filtered version num (_vXX) included
@@ -22,8 +22,9 @@ def version_up(filefullname: str):
         newvernum = 1
 
     newvernumchar = format(newvernum, "02d")
-    newfilename = f"{filename}_v{newvernumchar}.{extension}"
-    shutil.copy(filefullname, newfilename)
+    newfilename = f"{filedirname}/{filename}_v{newvernumchar}{extension}"
+    shutil.copy(filefullpath, newfilename)
+    print(f"{filefullpath} is copied {newfilename}")
 
 
 if __name__ == '__main__':
